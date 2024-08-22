@@ -1,0 +1,28 @@
+name: SCHEDULED should NOT run
+
+on:
+    schedule:
+        - cron: '00 15 * * 4'
+
+jobs:
+    check-week:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Check if this is the correct week
+              run: |
+                START_DATE="2024-08-15"
+                CURRENT_DATE=$(date +%Y-%m-%d)
+                WEEKS_DIFF=$(( ($(date -d $CURRENT_DATE +%s) - $(date -d $START_DATE +%s)) / 604800 ))
+                if [ $((WEEKS_DIFF % 2)) -ne 0];
+                then 
+                    echo "This is not the correct week. Exiting"
+                    exit 0
+                fi
+
+    continue-flow:
+        needs: check-week
+        runs-on: ubuntu-latest
+        steps:
+            - name: Continue if check week is ok
+              run: |
+                echo "running as expected"
