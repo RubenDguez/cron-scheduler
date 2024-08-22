@@ -1,11 +1,19 @@
-#! /bin/bash -e
+#!/bin/bash
 
+set -eu
+
+# The first argument passed to the script is the start date
 START_DATE="$1"
-CURRENT_DATE=$(date +%Y-%m-%d)
-WEEKS_DIFF=$(( ($(date -j -f "%Y-%m-%d" $CURRENT_DATE +%s) - $(date -j -f "%Y-%m-%d" $START_DATE +%s)) / (60*60*24*7) ))
 
+# Get the current date in the format YYYY-MM-DD
+CURRENT_DATE=$(date +%Y-%m-%d)
+
+# Calculate the difference in weeks
+WEEKS_DIFF=$(( ($(date -d "$CURRENT_DATE" +%s) - $(date -d "$START_DATE" +%s)) / (60*60*24*7) ))
+
+# Check if the difference in weeks is odd or even
 if [ $((WEEKS_DIFF % 2)) -ne 0 ]; then
-    exit 1;
+    exit 1
 else
-    exit 0;
+    exit 0
 fi

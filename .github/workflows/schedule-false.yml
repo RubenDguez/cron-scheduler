@@ -2,7 +2,7 @@ name: SCHEDULED False
 
 on:
     schedule:
-        - cron: '30 18 * * 4'
+        - cron: '45 20 * * 4'
 
 jobs:
     check-week:

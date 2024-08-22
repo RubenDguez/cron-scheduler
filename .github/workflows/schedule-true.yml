@@ -2,7 +2,7 @@ name: SCHEDULED True
 
 on:
     schedule:
-        - cron: '30 18 * * 4'
+        - cron: '45 20 * * 4'
 
 jobs:
     check-week:
@@ -17,7 +17,7 @@ jobs:
     continue-flow:
         needs: check-week
         runs-on: ubuntu-latest
-        if: ${{ success() }} # Continue only if check-week succeeds
+        if: ${{ success() }}
         steps:
             - name: Continue if check week is ok
               run: |
