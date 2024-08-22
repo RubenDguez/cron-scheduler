@@ -2,14 +2,17 @@ name: SCHEDULED False
 
 on:
     schedule:
-        - cron: '00 18 * * 4'
+        - cron: '30 18 * * 4'
 
 jobs:
     check-week:
         runs-on: ubuntu-latest
         steps:
+            - name: checkout code
+              uses: actions/checkout@v4
+
             - name: Check if this is the correct week
-              run: ./getweek.sh "2024-08-15"
+              run: .github/workflows/getweek.sh "2024-08-15"
 
     continue-flow:
         needs: check-week
