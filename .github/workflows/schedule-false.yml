@@ -1,9 +1,9 @@
-name: Biweekly Thursday Action
+name: Biweekly NOT Thursday Action
 
 on:
   schedule:
     # Runs every Thursday at 06:00 UTC (1 AM EST)
-    - cron: '0 22 * * 4'
+    - cron: '0 23 * * 4'
 
 jobs:
   biweekly-task:
