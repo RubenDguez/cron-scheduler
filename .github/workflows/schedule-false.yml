@@ -1,24 +1,34 @@
-name: SCHEDULED False
+name: Biweekly Thursday Action
 
 on:
-    schedule:
-        - cron: '45 20 * * 4'
+  schedule:
+    # Runs every Thursday at 06:00 UTC (1 AM EST)
+    - cron: '0 22 * * 4'
 
 jobs:
-    check-week:
-        runs-on: ubuntu-latest
-        steps:
-            - name: checkout code
-              uses: actions/checkout@v4
+  biweekly-task:
+    runs-on: ubuntu-latest
 
-            - name: Check if this is the correct week
-              run: .github/workflows/getweek.sh "2024-08-15"
+    steps:
+      - name: Set up date
+        id: date
+        run: |
+          # Get the current date and time in EST
+          current_date=$(TZ="America/New_York" date '+%Y-%m-%d %H:%M:%S')
+          
+          # Set the reference Thursday as 2024-08-22
+          recent_thursday="2024-08-15"
+          
+          # Calculate the number of weeks since a known "starting" Thursday (e.g., first Thursday of the year)
+          weeks_since_start=$(($(($(TZ="America/New_York" date -d "$recent_thursday" +%s) - $(TZ="America/New_York" date -d "2024-01-04" +%s))) / 604800))
+          
+          # Check if the number of weeks is even (meaning it's a bi-weekly Thursday)
+          if (( weeks_since_start % 2 == 0 )); then
+            echo "biweekly=true" >> $GITHUB_ENV
+          else
+            echo "biweekly=false" >> $GITHUB_ENV
+          fi
 
-    continue-flow:
-        needs: check-week
-        runs-on: ubuntu-latest
-        if: ${{ success() }}
-        steps:
-            - name: Continue if check week is ok
-              run: |
-                echo "running as expected"
+      - name: Run the biweekly task
+        if: env.biweekly == 'true'
+        run: echo "This action runs every other Thursday!"
